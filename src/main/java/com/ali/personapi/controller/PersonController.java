@@ -3,6 +3,7 @@ package com.ali.personapi.controller;
 
 import com.ali.personapi.dto.request.PersonDTO;
 import com.ali.personapi.dto.response.MessageResponseDTO;
+import com.ali.personapi.exception.PersonNotFoundException;
 import com.ali.personapi.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,5 +31,10 @@ public class PersonController {
     @GetMapping
     public List<PersonDTO> listAll(){
        return personService.listAll();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDTO findById(@PathVariable Long id) throws PersonNotFoundException {
+        return personService.findById(id);
     }
 }

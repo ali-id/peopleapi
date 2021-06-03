@@ -3,6 +3,7 @@ package com.ali.personapi.service;
 import com.ali.personapi.dto.request.PersonDTO;
 import com.ali.personapi.dto.response.MessageResponseDTO;
 import com.ali.personapi.entity.Person;
+import com.ali.personapi.exception.PersonNotFoundException;
 import com.ali.personapi.mapper.PersonMapper;
 import com.ali.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,17 @@ public class PersonService {
         return allPeople.stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+        //Optional<Person> optionalPerson = personRepository.findById(id);
+
+//        if (optionalPerson.isEmpty()){
+//            throw new PersonNotFoundException(id);
+//        }
+        return personMapper.toDTO(person);
+
     }
 }
