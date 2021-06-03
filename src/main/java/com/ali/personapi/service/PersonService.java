@@ -1,23 +1,31 @@
 package com.ali.personapi.service;
 
-import com.ali.personapi.dto.MessageResponseDTO;
+import com.ali.personapi.dto.request.PersonDTO;
+import com.ali.personapi.dto.response.MessageResponseDTO;
 import com.ali.personapi.entity.Person;
+import com.ali.personapi.mapper.PersonMapper;
 import com.ali.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 
 @Service
 public class PersonService {
 
     private PersonRepository personRepository;
 
+    private final PersonMapper personMapper = PersonMapper.INSTANCE;
+
     @Autowired
     public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
-    public MessageResponseDTO createPerson( Person person){
-        Person savePerson = personRepository.save(person);
+    public MessageResponseDTO createPerson(@Valid PersonDTO personDTO){
+        Person personToSave = personMapper.toModel(personDTO);
+
+        Person savePerson = personRepository.save(personToSave);
         return MessageResponseDTO
                 .builder()
                 .message("Created person with ID" + savePerson.getId())
